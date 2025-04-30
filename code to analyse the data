@@ -1,0 +1,89 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "98e29f0d-3a87-43fc-a862-61fe44dec9ec",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import seaborn as sns\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "df = pd.read_csv(\"train.csv\")  \n",
+    "\n",
+    "df.info()\n",
+    "print(df.describe())\n",
+    "print(df['Survived'].value_counts())\n",
+    "print(df['Pclass'].value_counts())\n",
+    "print(df['Sex'].value_counts())\n",
+    "\n",
+    "# Fix fillna issues\n",
+    "df['Age'] = df['Age'].fillna(df['Age'].median())\n",
+    "df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])\n",
+    "df.drop(columns=['Cabin'], inplace=True)\n",
+    "\n",
+    "# Fix heatmap issue\n",
+    "numeric_df = df.select_dtypes(include=[np.number])\n",
+    "plt.figure(figsize=(10, 6))\n",
+    "sns.heatmap(numeric_df.corr(), annot=True, cmap=\"coolwarm\")\n",
+    "plt.title(\"Correlation Heatmap\")\n",
+    "plt.show()\n",
+    "\n",
+    "# Pairplot\n",
+    "sns.pairplot(df[['Survived', 'Pclass', 'Age', 'SibSp', 'Parch', 'Fare']], hue='Survived')\n",
+    "plt.show()\n",
+    "\n",
+    "# Countplot by gender\n",
+    "sns.countplot(x=\"Survived\", hue=\"Sex\", data=df)\n",
+    "plt.title(\"Survival Count by Gender\")\n",
+    "plt.show()\n",
+    "\n",
+    "# Boxplot of Age and Fare by Survival\n",
+    "plt.figure(figsize=(12, 5))\n",
+    "\n",
+    "plt.subplot(1, 2, 1)\n",
+    "sns.boxplot(x='Survived', y='Age', data=df)\n",
+    "plt.title('Boxplot of Age by Survival')\n",
+    "\n",
+    "plt.subplot(1, 2, 2)\n",
+    "sns.boxplot(x='Survived', y='Fare', data=df)\n",
+    "plt.title('Boxplot of Fare by Survival')\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.show()\n",
+    "\n",
+    "# Scatterplot of Age vs Fare colored by Survived\n",
+    "plt.figure(figsize=(8, 6))\n",
+    "sns.scatterplot(x='Age', y='Fare', hue='Survived', data=df)\n",
+    "plt.title('Scatterplot of Age vs Fare by Survival')\n",
+    "plt.show()\n",
+    "\n",
+    "\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda env:base] *",
+   "language": "python",
+   "name": "conda-base-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
